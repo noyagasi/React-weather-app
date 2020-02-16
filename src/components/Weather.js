@@ -1,11 +1,12 @@
 import React from "react";
+import Box from "./Box";
 
 const Weather = props => {
     const upFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1);
     const citiesTemps = props.temp.map((t, index) => {
         if (t) {
-            return (<p key={index}>{upFirstLetter(props.cities[index])} temperature: {props.temp[index]}</p>);
-        }else{
+            return <Box key={index} title={upFirstLetter(props.cities[index])} content={props.temp[index]} />;
+        } else {
             return "";
         }
     })

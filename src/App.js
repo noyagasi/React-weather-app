@@ -53,11 +53,11 @@ class App extends React.Component {
     return (
       <div>
         <Titles />
-        <Form getWeather={this.getWeather} 
-        cities={this.state.cities}/>
+        <Form getWeather={this.getWeather}
+          cities={this.state.cities} />
         <Weather cities={this.state.cities}
           temp={this.state.temp}
-          error={this.state.error}/>
+          error={this.state.error} />
       </div >
     );
   }
