@@ -7,58 +7,60 @@ const API_KEY = "f441f5f7f9cec3ed1fd67e5c22b66396";
 
 class App extends React.Component {
   state = {
-    cities: ["london", "newyork", "telaviv",
-      "moscow", "saopaulo", "beijing", "mumbai",
-      "losangeles", "capetown", "dubai"],
+    cities: ["london", "manchester", "jerusalem",
+      "moscow", "brazilia", "beijing", "mumbai",
+      "chicago", "johannesburg", "dubai"],
     temp: ["", "", "", "", "", "", "", "", "", ""],
     error: ""
   }
   getWeather = async (e) => {
     e.preventDefault();
-    var i, arr = ["", "", "", "", "", "", "", "", "", ""];
+    var i, arr = ["", "", "", "", "", "", "", "", "", ""], isSelect = false;
     for (i = 0; i < 10; i++) {
       if (e.target.elements[i].checked) {
         arr[i] = "true";
-      }else{
+        isSelect = true;
+      } else {
         arr[i] = "";
       }
     }
     for (i = 0; i < 10; i++) {
       if (arr[i] === "true") {
-        const api_call = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${this.state.cities[i]}&appid=${API_KEY}&units=metric`);
-        const data = await api_call.json();
-        arr[i] = data.main.temp;
+        try {
+          const api_call = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${this.state.cities[i]}&appid=${API_KEY}&units=metric`);
+          const data = await api_call.json();
+          arr[i] = data.main.temp;
+        } catch (error) {
+          arr[i] = "";
+          alert(error);
+        }
+
       }
     }
     this.setState({ temp: arr });
-    if (this.state.temp === "") {
+    if (isSelect) {
+      this.setState({
+        error: ""
+      });
+    } else {
       this.setState({
         error: "Error: No city selected."
       });
     }
   };
 
-render() {
-  return (
-    <div>
-      <Titles />
-      <Form getWeather={this.getWeather} />
-      <Weather
-        london={this.state.temp[0]}
-        newyork={this.state.temp[1]}
-        telaviv={this.state.temp[2]}
-        moscow={this.state.temp[3]}
-        saopaulo={this.state.temp[4]}
-        beijing={this.state.temp[5]}
-        mumbai={this.state.temp[6]}
-        losangeles={this.state.temp[7]}
-        capetown={this.state.temp[8]}
-        dubai={this.state.temp[9]}
-        error={this.state.error}
-      />
-    </div >
-  );
-}
+  render() {
+    return (
+      <div>
+        <Titles />
+        <Form getWeather={this.getWeather} 
+        cities={this.state.cities}/>
+        <Weather cities={this.state.cities}
+          temp={this.state.temp}
+          error={this.state.error}/>
+      </div >
+    );
+  }
 }
 
 export default App;
